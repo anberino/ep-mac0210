@@ -15,8 +15,7 @@ def test(n, min, max):
     s = spline(w, min, max)
     t = np.arange(min, max, 0.001)
     m = len(t)
-    plt.plot(t, s(t))
-    plt.show()
+    plt.plot(t, s(t), 'r')
     y = s(t) #esse é o spline de vdd, eu acho
 
     #gera o valor com ruído baseado em s
@@ -24,7 +23,7 @@ def test(n, min, max):
     noise-= 0.5
     noise*= 100
     ynoise =  y + noise
-    plt.plot(t, ynoise)
+    plt.plot(t, ynoise, 'b', alpha=0.4)
     plt.show()
 
     #cria uma spline temporária pra pegar os betajs
