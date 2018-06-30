@@ -30,21 +30,22 @@ def test(n, min, max):
     arraytemp = np.full(len(t), 1)
     #print(arraytemp) #test print
     temp = spline(arraytemp, min, max)
-    Bt = np.zeros([n, m]) #deve ter um jeito melhor de fazer isso
-    for i in range(n):
-        for j in range(m):
-            Bt[i][j] = temp.beta_j(i, t[j])
-    #print(B) #test print
+    B = np.zeros([m, n]) #deve ter um jeito melhor de fazer isso
+    for i in range(m):
+        for j in range(n):
+            B[i][j] = temp.beta_j(j, t[i])
+    # Bt = np.matrix.transpose(Bt)
+    # print(len(t), n) #test print
 
     #calcula a matrix M1, a M2 e a b ((M1+lM2)w = b) para acharmos w
-    B = np.matrix.transpose(Bt)
-    M1 = np.matmul(Bt, B)
+    Bt = np.matrix.transpose(B)
+    M1 = np.dot(Bt, B)
     M2 = matrix_m2(n)
-    b = np.matmul(Bt, ynoise)
-    l = 10 #completamente arbitrário, segundo Mascarenhas
-    M = M1 + l*M2
+    b = np.dot(Bt, ynoise)
+    l = 5 #completamente arbitrário, segundo The Mask
+    M = M1 + (l*M2)
 
-    #resolve o sistema
+    # resolve o sistema
     w = np.linalg.solve(M, b)
 
     #plota a nova spline
