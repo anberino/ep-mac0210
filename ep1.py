@@ -15,6 +15,7 @@ def test(n, min, max):
     s = spline(ws, min, max)
     t = np.arange(min, max, 0.001)
     m = len(t)
+    plt.subplot(211)
     plt.plot(t, s(t), 'r')
     y = s(t) #esse é o spline de vdd, eu acho
 
@@ -24,7 +25,6 @@ def test(n, min, max):
     noise*= 100
     ynoise =  y + noise
     plt.plot(t, ynoise, 'b', alpha=0.4)
-    plt.show()
 
     #cria uma spline temporária pra pegar os betajs
     arraytemp = np.full(len(t), 1)
@@ -41,7 +41,7 @@ def test(n, min, max):
     M1 = np.matmul(Bt, B)
     M2 = matrix_m2(n)
     b = np.matmul(Bt, ynoise)
-    l = 1 #completamente arbitrário, segundo Mascarenhas
+    l = 10 #completamente arbitrário, segundo Mascarenhas
     M = M1 + l*M2
 
     #resolve o sistema
@@ -49,6 +49,7 @@ def test(n, min, max):
 
     #plota a nova spline
     aprox = spline(w)
+    plt.subplot(212)
     plt.plot(t, aprox(t))
     plt.show()
 
