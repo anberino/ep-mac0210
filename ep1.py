@@ -27,7 +27,8 @@ def test(n, min, max):
     plt.plot(t, ynoise, 'b', alpha=0.4)
 
     #cria uma spline temporária pra pegar os betajs
-    arraytemp = np.full(len(t), 1)
+    seed = [1]*n
+    arraytemp = np.array(seed) 
     #print(arraytemp) #test print
     temp = spline(arraytemp, min, max)
     B = np.zeros([m, n]) #deve ter um jeito melhor de fazer isso
@@ -42,7 +43,7 @@ def test(n, min, max):
     M1 = np.dot(Bt, B)
     M2 = matrix_m2(n)
     b = np.dot(Bt, ynoise)
-    l = 5 #completamente arbitrário, segundo The Mask
+    l = 6 #completamente arbitrário, segundo The Mask
     M = M1 + (l*M2)
 
     # resolve o sistema
