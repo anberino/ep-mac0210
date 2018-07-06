@@ -30,7 +30,7 @@ def ep1(n, min, max):
     plt.plot(t, s(t), 'r')
     y = s(t) # Essa é a spline original
 
-    # Gera os valores com ruído baseado em s
+    # Gera os valores com ruído baseados na spline original s
     noise = np.random.rand(m)
     noise-= 0.5
     noise*= 100
@@ -43,6 +43,8 @@ def ep1(n, min, max):
     seed = [1]*n
     arraytemp = np.array(seed)
     temp = spline(arraytemp, min, max)
+    
+    #constrói a matrix B usando os valores de beta j da spline temporária
     B = np.zeros([m, n])
     for i in range(m):
         for j in range(n):
@@ -53,7 +55,7 @@ def ep1(n, min, max):
     M1 = np.dot(Bt, B)
     M2 = matrix_m2(n)
     b = np.dot(Bt, ynoise)
-    l = 6 # Completamente arbitrário
+    l = 6 # Experimentalmente bom
     M = M1 + (l*M2)
 
     # Resolve o sistema
