@@ -1,5 +1,5 @@
 # Gabriel Sarti Massukado - NUSP 10284177
-# Henrique Cerquinho - NUSP 9793700
+# Henrique Cerquinho      - NUSP 9793700
 
 from splines import *
 import numpy as np
@@ -8,8 +8,19 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import functools
 
-def test(n, min, max):
-    #gera o valor certo
+"""
+Nesse EP será gerada uma spline exata (sem ruído) aleatória e então será
+adicionado ruido aos seus valores, para assim recuperarmos eles novamente
+utilizando os métodos vistos em aula. Para rodar o EP bastar rodar o comando
+    'python ep1.py'
+e ter na pasta o módulo splines.py.
+Serão plotados, em um gráfico, uma spline original aleatória (com n = 10) junto
+com os valores com ruído, e, em outro gráfico, a spline recuperada usando
+as fórmulas.
+"""
+
+def ep1(n, min, max):
+    # Gera uma spline exata
     ws = np.random.rand(n)
     ws-= 0.5
     s = spline(ws, min, max)
@@ -17,42 +28,44 @@ def test(n, min, max):
     m = len(t)
     plt.subplot(211)
     plt.plot(t, s(t), 'r')
-    y = s(t) #esse é o spline de vdd, eu acho
+    y = s(t) # Essa é a spline original
 
-    #gera o valor com ruído baseado em s
+    # Gera os valores com ruído baseado em s
     noise = np.random.rand(m)
     noise-= 0.5
     noise*= 100
     ynoise =  y + noise
+    plt.title("Spline original e valores com ruído")
+    plt.grid(True)
     plt.plot(t, ynoise, 'b', alpha=0.4)
 
-    #cria uma spline temporária pra pegar os betajs
+    # Cria uma spline temporária pra achar os beta_j's
     seed = [1]*n
-    arraytemp = np.array(seed) 
-    #print(arraytemp) #test print
+    arraytemp = np.array(seed)
     temp = spline(arraytemp, min, max)
-    B = np.zeros([m, n]) #deve ter um jeito melhor de fazer isso
+    B = np.zeros([m, n])
     for i in range(m):
         for j in range(n):
             B[i][j] = temp.beta_j(j, t[i])
-    # Bt = np.matrix.transpose(Bt)
-    # print(len(t), n) #test print
 
-    #calcula a matrix M1, a M2 e a b ((M1+lM2)w = b) para acharmos w
+    # Calcula a matriz M1, a M2 e a b ((M1+lM2)w = b) para acharmos w
     Bt = np.matrix.transpose(B)
     M1 = np.dot(Bt, B)
     M2 = matrix_m2(n)
     b = np.dot(Bt, ynoise)
-    l = 6 #completamente arbitrário, segundo The Mask
+    l = 6 # Completamente arbitrário
     M = M1 + (l*M2)
 
-    # resolve o sistema
+    # Resolve o sistema
     w = np.linalg.solve(M, b)
 
-    #plota a nova spline
+    # Plota a nova spline
     aprox = spline(w)
     plt.subplot(212)
+    plt.title("Spline recuperada")
+    plt.grid(True)
     plt.plot(t, aprox(t))
     plt.show()
 
-test(10, 0, 1)
+# Roda a função com n = 10
+ep1(10, 0, 1)
